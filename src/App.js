@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Home, Building2, Users, Calendar, Package, DollarSign, Clock,
+  Home, Building2, Users, Package, DollarSign, Clock,
   Settings, LogOut, Menu, X, Phone, Mail, MapPin, Star,
-  TrendingUp, TrendingDown, AlertCircle, CheckCircle, Eye,
-  Plus, Search, Filter, Download, Upload, Edit, Trash2
+  CheckCircle, Eye, Plus, Search, Filter, Download, Edit, Trash2
 } from 'lucide-react';
 
 const App = () => {
@@ -11,98 +10,29 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Modal-related state (re-added from previous version's logic)
+  // Modal-related state
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
   const [editingItem, setEditingItem] = useState(null);
 
   // Sample data
-  const [employees, setEmployeesState] = useState([ // Renamed setter to avoid conflict if you plan to modify
+  const [employees, setEmployeesState] = useState([
     { id: 1, name: 'Rajesh Kumar', role: 'admin', email: 'rajesh@bcsr.in', phone: '+91 9876543210' },
     { id: 2, name: 'Priya Sharma', role: 'supervisor', email: 'priya@bcsr.in', phone: '+91 9876543211' },
     { id: 3, name: 'Amit Singh', role: 'worker', email: 'amit@bcsr.in', phone: '+91 9876543212' }
   ]);
 
-  const [inventory, setInventoryState] = useState([ // Renamed setter
+  const [inventory, setInventoryState] = useState([
     { id: 1, name: 'Cement Bags', quantity: 150, unit: 'bags', cost: 450, supplier: 'ABC Cement Ltd' },
     { id: 2, name: 'Steel Rods', quantity: 75, unit: 'tons', cost: 65000, supplier: 'Steel India Corp' },
     { id: 3, name: 'Concrete Mixer', quantity: 2, unit: 'units', cost: 125000, supplier: 'Equipment Rental' }
   ]);
 
-  const [transactions, setTransactionsState] = useState([ // Renamed setter
+  const [transactions, setTransactionsState] = useState([
     { id: 1, type: 'income', amount: 500000, description: 'Project Payment - Site A', date: '2024-05-20' },
     { id: 2, type: 'expense', amount: 85000, description: 'Material Purchase', date: '2024-05-19' },
     { id: 3, type: 'expense', amount: 45000, description: 'Labor Payment', date: '2024-05-18' }
   ]);
-
-  // showAlert function (re-added)
-  const showAlert = (message) => {
-    alert(message);
-  };
-
-  // Modal control functions (re-added)
-  const openModal = (type, item = null) => {
-    setModalType(type);
-    setEditingItem(item);
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    setModalType('');
-    setEditingItem(null);
-  };
-
-  // Unified Event Handlers (duplicates removed)
-  const handleAddItem = (type) => {
-    // Updated to use modal logic, adjust as per your requirement
-    if (type === 'inventory item') {
-      openModal('add_inventory');
-    } else if (type === 'transaction') {
-      openModal('add_transaction');
-    } else if (type === 'employee') {
-      openModal('add_employee');
-    } else if (type === 'attendance') {
-      openModal('add_attendance');
-    } else {
-      showAlert(`Add ${type} functionality will be implemented here.`);
-    }
-  };
-
-  const handleEditItem = (type, item) => {
-    // This can also be updated to use openModal with an 'edit' type
-    openModal(`edit_${type.replace(/\s+/g, '_')}`, item); // Example: 'edit_inventory_item'
-    // showAlert(`Edit ${type}: ${item.name || item.description} feature will be implemented here`);
-  };
-
-  const handleDeleteItem = (type, item) => {
-    if (window.confirm(`Are you sure you want to delete this ${type} named "${item.name || item.description}"?`)) {
-      // Here you would add logic to update the actual state arrays
-      // For example, for inventory:
-      // if (type === 'inventory item') {
-      //   setInventoryState(prevInventory => prevInventory.filter(i => i.id !== item.id));
-      // }
-      showAlert(`${type} deleted successfully! (This is a demo, data not actually changed)`);
-    }
-  };
-
-  const handleQuoteRequest = () => {
-    openModal('quote_request');
-  };
-
-  const handleViewWork = () => {
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      aboutSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      alert('Scrolling to About section...');
-    }
-  };
-
-  const handleClockAction = (action) => {
-    const time = new Date().toLocaleTimeString();
-    showAlert(`Successfully clocked ${action} at ${time}`);
-  };
 
   const projects = [
     {
@@ -160,6 +90,120 @@ const App = () => {
       icon: Building2
     }
   ];
+
+  // Company Logo Component
+  const CompanyLogo = ({ size = "default" }) => {
+    const sizeClasses = {
+      small: "w-8 h-8",
+      default: "w-10 h-10", 
+      large: "w-16 h-16",
+      xl: "w-24 h-24"
+    };
+
+    // Use your professional logo image
+    return (
+      <div className={`${sizeClasses[size]} relative`}>
+        <img 
+          src="/bcsr-logo.png" 
+          alt="BCSR Projects Logo"
+          className={`${sizeClasses[size]} object-contain drop-shadow-lg`}
+          onError={(e) => {
+            // Fallback to icon if image doesn't load
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'flex';
+          }}
+        />
+        {/* Fallback icon (hidden by default) */}
+        <div 
+          className={`${sizeClasses[size]} bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center shadow-lg relative overflow-hidden`}
+          style={{display: 'none'}}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-transparent"></div>
+          <div className="absolute top-1 right-1 w-2 h-2 bg-yellow-400 rounded-full opacity-80"></div>
+          <div className="absolute bottom-1 left-1 w-1 h-1 bg-white/30 rounded-full"></div>
+          <Building2 className={`${size === 'small' ? 'h-4 w-4' : size === 'default' ? 'h-6 w-6' : size === 'large' ? 'h-10 w-10' : 'h-16 w-16'} text-white relative z-10`} />
+          {size !== "small" && (
+            <>
+              <div className="absolute bottom-1 right-2 w-1 h-2 bg-yellow-400 opacity-60"></div>
+              <div className="absolute top-2 left-1 w-1 h-1 bg-white/40 rounded-full"></div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Modal control functions
+  const openModal = (type, item = null) => {
+    setModalType(type);
+    setEditingItem(item);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setModalType('');
+    setEditingItem(null);
+  };
+
+  // Event Handlers
+  const handleAddItem = (type) => {
+    if (type === 'inventory item') {
+      openModal('add_inventory');
+    } else if (type === 'transaction') {
+      openModal('add_transaction');
+    } else if (type === 'employee') {
+      openModal('add_employee');
+    } else if (type === 'attendance') {
+      openModal('add_attendance');
+    } else {
+      alert(`Add ${type} functionality will be implemented here.`);
+    }
+  };
+
+  const handleEditItem = (type, item) => {
+    openModal(`edit_${type.replace(/\s+/g, '_')}`, item);
+  };
+
+  const handleDeleteItem = (type, item) => {
+    if (window.confirm(`Are you sure you want to delete this ${type} named "${item.name || item.description}"?`)) {
+      alert(`${type} deleted successfully! (This is a demo, data not actually changed)`);
+    }
+  };
+
+  const handleQuoteRequest = () => {
+    openModal('quote_request');
+  };
+
+  const handleViewWork = () => {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      aboutSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert('Scrolling to About section...');
+    }
+  };
+
+  const handleClockAction = (action) => {
+    const time = new Date().toLocaleTimeString();
+    alert(`Successfully clocked ${action} at ${time}`);
+  };
+
+  const handleLogin = (email, password) => {
+    const employee = employees.find(emp => emp.email === email);
+    if (employee && password === 'password123') {
+      setUser(employee);
+      setCurrentView('dashboard');
+      return true;
+    }
+    return false;
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentView('landing');
+    setSidebarOpen(false);
+  };
 
   // Modal Component
   const Modal = () => {
@@ -467,59 +511,15 @@ const App = () => {
                 required
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Estimated Budget</label>
-                <select
-                  value={formData.budget || ''}
-                  onChange={(e) => handleInputChange('budget', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Budget Range</option>
-                  <option value="Under ₹10 Lakhs">Under ₹10 Lakhs</option>
-                  <option value="₹10-50 Lakhs">₹10-50 Lakhs</option>
-                  <option value="₹50 Lakhs - ₹1 Crore">₹50 Lakhs - ₹1 Crore</option>
-                  <option value="₹1-5 Crores">₹1-5 Crores</option>
-                  <option value="Above ₹5 Crores">Above ₹5 Crores</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Timeline</label>
-                <select
-                  value={formData.timeline || ''}
-                  onChange={(e) => handleInputChange('timeline', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select Timeline</option>
-                  <option value="Urgent (Within 1 month)">Urgent (Within 1 month)</option>
-                  <option value="3-6 months">3-6 months</option>
-                  <option value="6-12 months">6-12 months</option>
-                  <option value="Above 1 year">Above 1 year</option>
-                  <option value="Planning stage">Planning stage</option>
-                </select>
-              </div>
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Project Details</label>
               <textarea
                 value={formData.details || ''}
                 onChange={(e) => handleInputChange('details', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Please describe your project requirements, size, specific needs, etc."
+                placeholder="Please describe your project requirements"
                 rows="4"
               />
-            </div>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="consent"
-                checked={formData.consent || false}
-                onChange={(e) => handleInputChange('consent', e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="consent" className="ml-2 block text-sm text-gray-700">
-                I agree to be contacted by BCSR Projects for this quote request
-              </label>
             </div>
           </div>
         );
@@ -573,46 +573,13 @@ const App = () => {
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status *</label>
-              <select
-                value={formData.status || 'present'}
-                onChange={(e) => handleInputChange('status', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="present">Present</option>
-                <option value="absent">Absent</option>
-                <option value="late">Late</option>
-                <option value="half-day">Half Day</option>
-                <option value="overtime">Overtime</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-              <textarea
-                value={formData.notes || ''}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Additional notes (optional)"
-                rows="2"
-              />
-            </div>
           </div>
         );
       }
 
-      // Default form for other modals
       return (
         <div className="space-y-4">
-          <p className="text-gray-600">
-            This is a demo interface for {modalType}. In a real application, this would contain:
-          </p>
-          <ul className="text-sm text-gray-500 space-y-1">
-            <li>• Form fields for data entry</li>
-            <li>• Input validation and user feedback</li>
-            <li>• Logic to save data to the state</li>
-          </ul>
-          {editingItem && <pre className="text-xs bg-gray-100 p-2 rounded">Editing: {JSON.stringify(editingItem)}</pre>}
+          <p className="text-gray-600">Form fields for {modalType}</p>
         </div>
       );
     };
@@ -621,13 +588,8 @@ const App = () => {
       <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {title}
-            </h3>
-            <button
-              onClick={closeModal}
-              className="text-gray-400 hover:text-gray-600"
-            >
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <button onClick={closeModal} className="text-gray-400 hover:text-gray-600">
               <X className="h-6 w-6" />
             </button>
           </div>
@@ -653,35 +615,19 @@ const App = () => {
     );
   };
 
-  const handleLogin = (email, password) => {
-    const employee = employees.find(emp => emp.email === email);
-    if (employee && password === 'password123') { // In a real app, use secure auth
-      setUser(employee);
-      setCurrentView('dashboard');
-      return true;
-    }
-    return false;
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setCurrentView('landing');
-    setSidebarOpen(false);
-  };
-
   // Landing Page Component
   const LandingPage = () => (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-lg fixed w-full top-0 z-50">
+      <header className="bg-white shadow-xl fixed w-full top-0 z-50 backdrop-blur-sm bg-white/95">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Building2 className="h-6 w-6 text-white" />
-            </div>
+          <div className="flex items-center space-x-4">
+            <CompanyLogo size="default" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">BCSR Projects</h1>
-              <p className="text-xs text-gray-500">Private Limited</p>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                BCSR Projects
+              </h1>
+              <p className="text-xs text-gray-500 font-medium">Private Limited</p>
             </div>
           </div>
           <nav className="hidden md:flex space-x-8">
@@ -692,7 +638,7 @@ const App = () => {
           </nav>
           <button
             onClick={() => setCurrentView('login')}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-medium shadow-lg"
           >
             Employee Login
           </button>
@@ -701,19 +647,16 @@ const App = () => {
 
       {/* Hero Section */}
       <section id="home" className="pt-20 bg-gradient-to-br from-blue-50 via-white to-gray-100 relative overflow-hidden">
-        <div className="absolute top-20 right-10 w-32 h-32 bg-blue-200/30 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-20 left-10 w-40 h-40 bg-purple-200/20 rounded-full blur-3xl"></div>
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-6">
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-50 rounded-full text-blue-700 text-sm font-medium mb-6">
                 🏗️ Leading Construction Company in India
               </div>
               <h2 className="text-5xl font-bold text-gray-800 mb-6 leading-tight">
                 Building Dreams,<br />
-                <span className="text-blue-600 relative">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
                   Creating Reality
-                  <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
                 </span>
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -723,7 +666,7 @@ const App = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={handleQuoteRequest}
-                  className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium"
                 >
                   Get Free Quote
                 </button>
@@ -736,69 +679,46 @@ const App = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="w-full h-96 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg shadow-2xl flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 bg-black/20"></div>
+              <div className="w-full h-96 bg-gradient-to-br from-slate-800 via-gray-700 to-slate-900 rounded-2xl shadow-2xl flex items-center justify-center relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="relative z-10 text-white text-center">
-                  <Building2 className="h-20 w-20 mx-auto mb-4 opacity-80" />
-                  <h3 className="text-2xl font-bold mb-2">Live Construction Site</h3>
+                  <CompanyLogo size="xl" />
+                  <h3 className="text-2xl font-bold mb-2 mt-4">Live Construction Site</h3>
                   <p className="text-lg opacity-90">Modern Residential Complex</p>
                 </div>
                 <div className="absolute bottom-4 left-4 text-white z-10">
                   <p className="text-sm font-medium">Live Project: Residential Complex</p>
                   <p className="text-xs opacity-90">Gurgaon, Haryana • 75% Complete</p>
                 </div>
-                <div className="absolute top-4 right-4 w-8 h-16 bg-yellow-400 rounded opacity-60"></div>
-                <div className="absolute top-8 right-16 w-6 h-20 bg-yellow-500 rounded opacity-40"></div>
               </div>
             </div>
-          </div> {/* Closes grid */}
-        </div> {/* Closes container */}
-        {/* Additional CTAs if needed, ensuring they are within a proper layout structure */}
-        <div className="container mx-auto px-4 pb-20 text-center">
-          <div className="inline-block mt-0">
-            <button
-              onClick={handleQuoteRequest}
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-medium shadow-lg"
-            >
-              Get Your Free Quote Now
-            </button>
-          </div>
-          <div className="inline-block mt-4 sm:mt-0 sm:ml-4">
-             <button
-              onClick={handleViewWork}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View Complete Portfolio
-            </button>
           </div>
         </div>
       </section>
 
-      {/* Gallery Section - No changes from original, seems correct */}
-      <section className="py-20 bg-gray-900 text-white">
+      {/* Gallery Section */}
+      <section className="py-20 bg-gradient-to-b from-gray-900 via-slate-800 to-gray-900 text-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h3 className="text-4xl font-bold mb-4">Project Gallery</h3>
             <p className="text-xl opacity-90">Visual showcase of our construction excellence</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { icon: Building2, color: "from-blue-500 to-blue-600", label: "Residential" },
-              { icon: Settings, color: "from-purple-500 to-purple-600", label: "Commercial" },
-              { icon: Package, color: "from-green-500 to-green-600", label: "Infrastructure" },
-              { icon: Users, color: "from-orange-500 to-orange-600", label: "Industrial" },
-              { icon: Building2, color: "from-red-500 to-red-600", label: "Healthcare" },
-              { icon: Settings, color: "from-indigo-500 to-indigo-600", label: "Education" },
-              { icon: Package, color: "from-yellow-500 to-yellow-600", label: "Retail" },
-              { icon: Building2, color: "from-pink-500 to-pink-600", label: "Mixed Use" }
+              { icon: Building2, color: "from-blue-500 to-blue-600", label: "Residential", emoji: "🏠" },
+              { icon: Settings, color: "from-purple-500 to-purple-600", label: "Commercial", emoji: "🏢" },
+              { icon: Package, color: "from-green-500 to-green-600", label: "Infrastructure", emoji: "🌉" },
+              { icon: Users, color: "from-orange-500 to-orange-600", label: "Industrial", emoji: "🏭" },
+              { icon: Building2, color: "from-red-500 to-red-600", label: "Healthcare", emoji: "🏥" },
+              { icon: Settings, color: "from-indigo-500 to-indigo-600", label: "Education", emoji: "🎓" },
+              { icon: Package, color: "from-yellow-500 to-yellow-600", label: "Retail", emoji: "🛍️" },
+              { icon: Building2, color: "from-pink-500 to-pink-600", label: "Mixed Use", emoji: "🏘️" }
             ].map((item, index) => (
-              <div key={index} className="relative group overflow-hidden rounded-lg aspect-square">
-                <div className={`w-full h-full bg-gradient-to-br ${item.color} flex items-center justify-center transition-transform duration-300 group-hover:scale-110 relative`}>
-                  <item.icon className="h-16 w-16 text-white/80" />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                  <div className="absolute bottom-2 left-2 text-white text-xs font-medium opacity-80">
-                    {item.label}
-                  </div>
+              <div key={index} className="relative group overflow-hidden rounded-xl aspect-square">
+                <div className={`w-full h-full bg-gradient-to-br ${item.color} flex flex-col items-center justify-center transition-all duration-500 group-hover:scale-110 relative`}>
+                  <div className="text-4xl mb-2">{item.emoji}</div>
+                  <item.icon className="h-12 w-12 text-white/90 mb-2" />
+                  <div className="text-white text-sm font-bold opacity-90">{item.label}</div>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <Eye className="h-8 w-8 text-white" />
@@ -806,16 +726,10 @@ const App = () => {
               </div>
             ))}
           </div>
-           {/* This "View Complete Portfolio" button was in bcsr-website (1).tsx's gallery section,
-               but it seems more appropriate in the Hero or a dedicated "Projects" call to action.
-               The Hero section now has a similar button.
-               If a different one is needed for the Gallery, it can be added here.
-               For now, I'm keeping the structure from bcsr-website (2).tsx for this section.
-            */}
         </div>
       </section>
 
-      {/* Testimonials Section - No changes */}
+      {/* Testimonials Section */}
       <section className="py-20 bg-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -848,7 +762,7 @@ const App = () => {
         </div>
       </section>
 
-      {/* Services Section - No changes */}
+      {/* Services Section */}
       <section id="services" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -864,9 +778,6 @@ const App = () => {
               <div key={index} className="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div className={`relative h-48 bg-gradient-to-br ${service.color} flex items-center justify-center`}>
                   <service.icon className="h-16 w-16 text-white/80" />
-                  <div className="absolute inset-0 bg-black/10"></div>
-                  <div className="absolute bottom-4 left-4"><div className="w-8 h-8 bg-white/20 rounded"></div></div>
-                  <div className="absolute top-4 right-4"><div className="w-6 h-6 bg-white/20 rounded-full"></div></div>
                 </div>
                 <div className="p-6">
                   <h4 className="text-xl font-semibold text-gray-800 mb-3">{service.title}</h4>
@@ -877,10 +788,8 @@ const App = () => {
           </div>
         </div>
       </section>
-      
 
-
-      {/* About Section - No changes */}
+      {/* About Section */}
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
@@ -889,28 +798,55 @@ const App = () => {
               <p className="text-lg text-gray-600 mb-6">With over 15 years of experience in the construction industry, BCSR Project Private Limited has established itself as a leading construction company in India. We specialize in delivering high-quality construction projects on time and within budget.</p>
               <p className="text-lg text-gray-600 mb-8">Our commitment to excellence, innovative construction techniques, and customer satisfaction has made us the preferred choice for residential, commercial, and infrastructure projects across major Indian cities.</p>
               <div className="grid grid-cols-2 gap-6">
-                <div className="text-center p-4 bg-blue-50 rounded-lg"><div className="text-3xl font-bold text-blue-600">500+</div><div className="text-gray-600">Projects Completed</div></div>
-                <div className="text-center p-4 bg-green-50 rounded-lg"><div className="text-3xl font-bold text-green-600">15+</div><div className="text-gray-600">Years Experience</div></div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg"><div className="text-3xl font-bold text-purple-600">100+</div><div className="text-gray-600">Expert Team</div></div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg"><div className="text-3xl font-bold text-orange-600">50+</div><div className="text-gray-600">Cities Served</div></div>
+                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
+                  <div className="text-gray-600">Projects Completed</div>
+                </div>
+                <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl">
+                  <div className="text-3xl font-bold text-green-600 mb-2">15+</div>
+                  <div className="text-gray-600">Years Experience</div>
+                </div>
+                <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl">
+                  <div className="text-3xl font-bold text-purple-600 mb-2">100+</div>
+                  <div className="text-gray-600">Expert Team</div>
+                </div>
+                <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+                  <div className="text-3xl font-bold text-orange-600 mb-2">50+</div>
+                  <div className="text-gray-600">Cities Served</div>
+                </div>
               </div>
             </div>
             <div className="space-y-4">
-              <div className="h-64 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg shadow-lg flex items-center justify-center relative overflow-hidden">
-                <Users className="h-24 w-24 text-white/80" />
-                <div className="absolute inset-0 bg-black/20"></div>
-                <div className="absolute bottom-4 left-4 text-white"><p className="text-sm font-medium">Our Expert Team</p><p className="text-xs opacity-90">Building Excellence Together</p></div>
-                <div className="absolute top-4 right-4 w-8 h-8 bg-white/20 rounded-full"></div>
-                <div className="absolute top-8 left-8 w-6 h-6 bg-white/30 rounded-full"></div>
+              <div className="h-64 bg-gradient-to-br from-slate-100 via-gray-200 to-slate-300 rounded-xl shadow-lg flex items-center justify-center relative">
+                <div className="text-center">
+                  <Users className="h-24 w-24 text-gray-600 mx-auto mb-4" />
+                  <h4 className="text-xl font-bold text-gray-800 mb-2">Our Expert Team</h4>
+                  <p className="text-gray-600">Building Excellence Together</p>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="h-32 bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg shadow-md flex items-center justify-center relative"><Settings className="h-12 w-12 text-white/80" /><div className="absolute bottom-2 left-2 text-white text-xs font-medium">Equipment</div></div>
-                <div className="h-32 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg shadow-md flex items-center justify-center relative"><Package className="h-12 w-12 text-white/80" /><div className="absolute bottom-2 left-2 text-white text-xs font-medium">Materials</div></div>
+                <div className="h-32 bg-gradient-to-br from-yellow-100 to-yellow-300 rounded-xl flex items-center justify-center">
+                  <div className="text-center">
+                    <Settings className="h-10 w-10 text-yellow-700 mx-auto mb-2" />
+                    <div className="text-yellow-800 text-sm font-bold">Equipment</div>
+                  </div>
+                </div>
+                <div className="h-32 bg-gradient-to-br from-orange-100 to-orange-300 rounded-xl flex items-center justify-center">
+                  <div className="text-center">
+                    <Package className="h-10 w-10 text-orange-700 mx-auto mb-2" />
+                    <div className="text-orange-800 text-sm font-bold">Materials</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          
+          {/* Leadership Team */}
           <div className="bg-gray-50 rounded-2xl p-8">
-            <div className="text-center mb-12"><h4 className="text-3xl font-bold text-gray-800 mb-4">Our Leadership Team</h4><p className="text-lg text-gray-600">Meet the experts behind BCSR's success</p></div>
+            <div className="text-center mb-12">
+              <h4 className="text-3xl font-bold text-gray-800 mb-4">Our Leadership Team</h4>
+              <p className="text-lg text-gray-600">Meet the experts behind BCSR's success</p>
+            </div>
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 { name: "Rajesh Kumar", position: "Managing Director", experience: "20+ Years", initials: "RK", color: "from-blue-500 to-blue-600" },
@@ -929,34 +865,84 @@ const App = () => {
         </div>
       </section>
 
-      {/* Contact Section - No changes */}
+      {/* Contact Section */}
       <section id="contact" className="py-20 bg-blue-600 text-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16"><h3 className="text-4xl font-bold mb-4">Get In Touch</h3><p className="text-xl opacity-90">Ready to start your next construction project?</p></div>
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold mb-4">Get In Touch</h3>
+            <p className="text-xl opacity-90">Ready to start your next construction project?</p>
+          </div>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center"><Phone className="h-12 w-12 mx-auto mb-4" /><h4 className="text-xl font-semibold mb-2">Call Us</h4><p>+91 11 4567 8900</p><p>+91 98765 43210</p></div>
-            <div className="text-center"><Mail className="h-12 w-12 mx-auto mb-4" /><h4 className="text-xl font-semibold mb-2">Email Us</h4><p>info@bcsrprojects.in</p><p>projects@bcsrprojects.in</p></div>
-            <div className="text-center"><MapPin className="h-12 w-12 mx-auto mb-4" /><h4 className="text-xl font-semibold mb-2">Visit Us</h4><p>123 Construction Plaza</p><p>New Delhi, India 110001</p></div>
+            <div className="text-center">
+              <Phone className="h-12 w-12 mx-auto mb-4" />
+              <h4 className="text-xl font-semibold mb-2">Call Us</h4>
+              <p>+91 11 4567 8900</p>
+              <p>+91 98765 43210</p>
+            </div>
+            <div className="text-center">
+              <Mail className="h-12 w-12 mx-auto mb-4" />
+              <h4 className="text-xl font-semibold mb-2">Email Us</h4>
+              <p>info@bcsrprojects.in</p>
+              <p>projects@bcsrprojects.in</p>
+            </div>
+            <div className="text-center">
+              <MapPin className="h-12 w-12 mx-auto mb-4" />
+              <h4 className="text-xl font-semibold mb-2">Visit Us</h4>
+              <p>123 Construction Plaza</p>
+              <p>New Delhi, India 110001</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer - No changes */}
+      {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
-            <div><div className="flex items-center space-x-2 mb-4"><Building2 className="h-8 w-8 text-blue-400" /><h4 className="text-xl font-bold">BCSR Projects</h4></div><p className="text-gray-400">Building excellence across India with quality, innovation, and reliability.</p></div>
-            <div><h5 className="text-lg font-semibold mb-4">Services</h5><ul className="space-y-2 text-gray-400"><li>Residential Construction</li><li>Commercial Projects</li><li>Infrastructure Development</li><li>Project Management</li></ul></div>
-            <div><h5 className="text-lg font-semibold mb-4">Company</h5><ul className="space-y-2 text-gray-400"><li>About Us</li><li>Our Team</li><li>Careers</li><li>Contact</li></ul></div>
-            <div><h5 className="text-lg font-semibold mb-4">Connect</h5><ul className="space-y-2 text-gray-400"><li>LinkedIn</li><li>Facebook</li><li>Twitter</li><li>Instagram</li></ul></div>
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <CompanyLogo size="default" />
+                <h4 className="text-xl font-bold">BCSR Projects</h4>
+              </div>
+              <p className="text-gray-400">Building excellence across India with quality, innovation, and reliability.</p>
+            </div>
+            <div>
+              <h5 className="text-lg font-semibold mb-4">Services</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>Residential Construction</li>
+                <li>Commercial Projects</li>
+                <li>Infrastructure Development</li>
+                <li>Project Management</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-lg font-semibold mb-4">Company</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>About Us</li>
+                <li>Our Team</li>
+                <li>Careers</li>
+                <li>Contact</li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-lg font-semibold mb-4">Connect</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>LinkedIn</li>
+                <li>Facebook</li>
+                <li>Twitter</li>
+                <li>Instagram</li>
+              </ul>
+            </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"><p>&copy; {new Date().getFullYear()} BCSR Project Private Limited. All rights reserved.</p></div>
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} BCSR Project Private Limited. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
   );
 
-  // Login Page Component (No changes needed for this fix)
+  // Login Page Component
   const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -974,7 +960,7 @@ const App = () => {
         <div className="max-w-md w-full space-y-8">
           <div>
             <div className="flex items-center justify-center space-x-2 mb-8">
-              <Building2 className="h-12 w-12 text-blue-600" />
+              <CompanyLogo size="large" />
               <h2 className="text-3xl font-bold text-gray-900">BCSR Projects</h2>
             </div>
             <h3 className="text-center text-2xl font-bold text-gray-900">Employee Login</h3>
@@ -1013,8 +999,7 @@ const App = () => {
     );
   };
 
-
-  // Dashboard Components (No changes needed for this fix, but ensure handleAddItem, etc. are correctly used)
+  // Dashboard Components
   const Sidebar = () => {
     const menuItems = [
       { icon: Home, label: 'Dashboard', view: 'dashboard' },
@@ -1025,20 +1010,41 @@ const App = () => {
     ];
 
     return (
-      <div className={`bg-gray-800 text-white w-64 min-h-screen fixed left-0 top-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out z-30`}>
+      <div className={`bg-gradient-to-b from-gray-800 to-gray-900 text-white w-64 min-h-screen fixed left-0 top-0 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out z-30 shadow-2xl`}>
         <div className="p-4">
-          <div className="flex items-center space-x-2 mb-8"><Building2 className="h-8 w-8 text-blue-400" /><h2 className="text-xl font-bold">BCSR Dashboard</h2></div>
+          <div className="flex items-center space-x-3 mb-8">
+            <CompanyLogo size="default" />
+            <div>
+              <h2 className="text-xl font-bold">BCSR Dashboard</h2>
+              <p className="text-xs text-gray-400">Management Portal</p>
+            </div>
+          </div>
           <nav className="space-y-2">
             {menuItems.map((item) => (
-              <button key={item.view} onClick={() => {setCurrentView(item.view); setSidebarOpen(false);}} className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${currentView === item.view ? 'bg-blue-600' : 'hover:bg-gray-700'}`}>
-                <item.icon className="h-5 w-5" /><span>{item.label}</span>
+              <button 
+                key={item.view} 
+                onClick={() => {setCurrentView(item.view); setSidebarOpen(false);}} 
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                  currentView === item.view 
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg' 
+                    : 'hover:bg-gray-700/50 text-gray-300 hover:text-white'
+                }`}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="font-medium">{item.label}</span>
               </button>
             ))}
           </nav>
         </div>
         <div className="absolute bottom-4 left-4 right-4">
-          <div className="bg-gray-700 p-3 rounded-lg mb-4"><p className="text-sm font-medium">{user?.name}</p><p className="text-xs text-gray-400 capitalize">{user?.role}</p></div>
-          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-red-600 transition-colors"><LogOut className="h-5 w-5" /><span>Logout</span></button>
+          <div className="bg-gradient-to-r from-gray-700 to-gray-800 p-4 rounded-xl mb-4">
+            <p className="text-sm font-medium text-white">{user?.name}</p>
+            <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+          </div>
+          <button onClick={handleLogout} className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-600 transition-colors">
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     );
@@ -1112,9 +1118,9 @@ const App = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between"><h3 className="text-lg font-semibold text-gray-900">Inventory Items</h3>
             <div className="flex space-x-2">
-              <button onClick={() => showAlert('Search functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Search className="h-4 w-4" /></button>
-              <button onClick={() => showAlert('Filter functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Filter className="h-4 w-4" /></button>
-              <button onClick={() => showAlert('Export functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Download className="h-4 w-4" /></button>
+              <button onClick={() => alert('Search functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Search className="h-4 w-4" /></button>
+              <button onClick={() => alert('Filter functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Filter className="h-4 w-4" /></button>
+              <button onClick={() => alert('Export functionality will be implemented here')} className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"><Download className="h-4 w-4" /></button>
             </div>
           </div>
         </div>
@@ -1162,7 +1168,7 @@ const App = () => {
                   <td className="px-6 py-4 whitespace-nowrap"><span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }`}>{transaction.type}</span></td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">₹{transaction.amount.toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium"><div className="flex space-x-2">
-                    <button onClick={() => showAlert(`Viewing details for: ${transaction.description}`)} className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"><Eye className="h-4 w-4" /></button>
+                    <button onClick={() => alert(`Viewing details for: ${transaction.description}`)} className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"><Eye className="h-4 w-4" /></button>
                     <button onClick={() => handleEditItem('transaction', transaction)} className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"><Edit className="h-4 w-4" /></button>
                   </div></td>
                 </tr>
@@ -1242,7 +1248,6 @@ const App = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{employee.phone}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium"><div className="flex space-x-2">
                     <button onClick={() => handleEditItem('employee', employee)} className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"><Edit className="h-4 w-4" /></button>
-
                     <button onClick={() => handleDeleteItem('employee', employee)} className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors"><Trash2 className="h-4 w-4" /></button>
                   </div></td>
                 </tr>
@@ -1255,7 +1260,6 @@ const App = () => {
   );
 
   // Main App Layout
-  // Add <Modal /> to each top-level return to make it available
   if (currentView === 'landing') {
     return (
       <>
@@ -1274,7 +1278,7 @@ const App = () => {
     );
   }
 
-  if (!user) { // If not logged in, show login page
+  if (!user) {
     return (
       <>
         <LoginPage />
@@ -1287,9 +1291,9 @@ const App = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 flex flex-col lg:ml-64"> {/* Ensure ml-64 matches sidebar width */}
+      <div className="flex-1 flex flex-col lg:ml-64">
         <DashboardHeader />
-        <main className="flex-1 overflow-y-auto"> {/* Changed to overflow-y-auto for better scroll handling */}
+        <main className="flex-1 overflow-y-auto">
           {currentView === 'dashboard' && <Dashboard />}
           {currentView === 'inventory' && <InventoryView />}
           {currentView === 'transactions' && <TransactionsView />}
@@ -1303,7 +1307,7 @@ const App = () => {
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
-      <Modal /> {/* Modal rendered at the top level of the authenticated view */}
+      <Modal />
     </div>
   );
 };
